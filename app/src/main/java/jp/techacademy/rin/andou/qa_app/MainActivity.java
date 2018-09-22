@@ -15,6 +15,7 @@ import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -116,7 +117,7 @@ public class MainActivity extends AppCompatActivity
 
         }
     };
-    // --- ここまで追加する ---
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -152,7 +153,16 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        // ナビゲーションドロワーの設定
+        FloatingActionButton fab2 = (FloatingActionButton) findViewById(R.id.fab2);
+        fab2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "クリックされた", Snackbar.LENGTH_LONG).show();
+            }
+        });
+
+
+    // ナビゲーションドロワーの設定
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, mToolbar, R.string.app_name, R.string.app_name);
         drawer.addDrawerListener(toggle);
@@ -161,7 +171,6 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        // --- ここから ---
         // Firebase
         mDatabaseReference = FirebaseDatabase.getInstance().getReference();
 
@@ -170,7 +179,16 @@ public class MainActivity extends AppCompatActivity
         mAdapter = new QuestionsListAdapter(this);
         mQuestionArrayList = new ArrayList<Question>();
         mAdapter.notifyDataSetChanged();
-        // --- ここまで追加する ---
+
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // Questionのインスタンスを渡して質問詳細画面を起動する
+                Intent intent = new Intent(getApplicationContext(), QuestionDetailActivity.class);
+                intent.putExtra("question", mQuestionArrayList.get(position));
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
