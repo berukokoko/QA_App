@@ -161,6 +161,8 @@ public class MainActivity extends AppCompatActivity
                 DatabaseReference dataBaseReference = FirebaseDatabase.getInstance().getReference();
                 DatabaseReference genreRef = dataBaseReference.child(Const.ContentsPATH).child(String.valueOf(mGenre));
                 DatabaseReference genreRef2 = dataBaseReference.child(Const.favorite).child(users).child();
+
+                
             }
         });
 
