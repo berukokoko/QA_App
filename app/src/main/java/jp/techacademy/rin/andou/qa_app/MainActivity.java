@@ -159,7 +159,6 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View view) {
                 Snackbar.make(view, "クリックされた", Snackbar.LENGTH_LONG).show();
                 DatabaseReference dataBaseReference = FirebaseDatabase.getInstance().getReference();
-                //DatabaseReference genreRef = dataBaseReference.child(Const.ContentsPATH).child(String.valueOf(mGenre));
                 DatabaseReference genreRef2 = dataBaseReference.child(Const.FavoritePATH).child(Const.UsersPATH).push();
 
             }
