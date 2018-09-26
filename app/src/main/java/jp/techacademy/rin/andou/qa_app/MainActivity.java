@@ -28,6 +28,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -153,16 +154,6 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        FloatingActionButton fab2 = (FloatingActionButton) findViewById(R.id.fab2);
-        fab2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "クリックされた", Snackbar.LENGTH_LONG).show();
-                DatabaseReference dataBaseReference = FirebaseDatabase.getInstance().getReference();
-                DatabaseReference genreRef2 = dataBaseReference.child(Const.FavoritePATH).child(Const.UsersPATH).push();
-
-            }
-        });
 
 
 
