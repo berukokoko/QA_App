@@ -18,6 +18,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.HashMap;
+import java.util.Map;
+
+import static java.lang.String.valueOf;
 
 public class QuestionDetailActivity extends AppCompatActivity {
 
@@ -114,9 +117,23 @@ public class QuestionDetailActivity extends AppCompatActivity {
         fab2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "クリックされた", Snackbar.LENGTH_LONG).show();
+
+
+                //登録する。
                 DatabaseReference dataBaseReference = FirebaseDatabase.getInstance().getReference();
-                DatabaseReference genreRef2 = dataBaseReference.child(Const.FavoritePATH).child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child();
+                DatabaseReference genreRef2 = dataBaseReference.child(Const.FavoritePATH).child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(mQuestion.getQuestionUid());
+                
+                if(genreRef2 == null){
+                    Snackbar.make(view, "DBにないので新しく登録する", Snackbar.LENGTH_LONG).show();
+                    Map<String, String> data = new HashMap<String, String>();
+                    data.put("genre",valueOf(mQuestion.getGenre()) );
+                    genreRef2.setValue(data);
+                }else{
+                    Snackbar.make(view, "DBにあるので消す", Snackbar.LENGTH_LONG).show();
+                    genreRef2.removeValue();
+                }
+
+
 
 
             }
@@ -124,7 +141,7 @@ public class QuestionDetailActivity extends AppCompatActivity {
 
 
         DatabaseReference dataBaseReference = FirebaseDatabase.getInstance().getReference();
-        mAnswerRef = dataBaseReference.child(Const.ContentsPATH).child(String.valueOf(mQuestion.getGenre())).child(mQuestion.getQuestionUid()).child(Const.AnswersPATH);
+        mAnswerRef = dataBaseReference.child(Const.ContentsPATH).child(valueOf(mQuestion.getGenre())).child(mQuestion.getQuestionUid()).child(Const.AnswersPATH);
         mAnswerRef.addChildEventListener(mEventListener);
 
     }
