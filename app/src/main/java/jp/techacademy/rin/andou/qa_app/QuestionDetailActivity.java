@@ -16,6 +16,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -122,7 +123,8 @@ public class QuestionDetailActivity extends AppCompatActivity {
                 //登録する。
                 DatabaseReference dataBaseReference = FirebaseDatabase.getInstance().getReference();
                 DatabaseReference genreRef2 = dataBaseReference.child(Const.FavoritePATH).child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(mQuestion.getQuestionUid());
-                
+
+
                 if(genreRef2 == null){
                     Snackbar.make(view, "DBにないので新しく登録する", Snackbar.LENGTH_LONG).show();
                     Map<String, String> data = new HashMap<String, String>();
@@ -132,6 +134,20 @@ public class QuestionDetailActivity extends AppCompatActivity {
                     Snackbar.make(view, "DBにあるので消す", Snackbar.LENGTH_LONG).show();
                     genreRef2.removeValue();
                 }
+
+                genreRef2.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        //ここにかく。
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        //ここにかく。
+                    }
+                    });
+
+
 
 
 
