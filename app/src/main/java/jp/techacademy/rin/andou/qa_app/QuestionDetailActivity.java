@@ -31,6 +31,9 @@ public class QuestionDetailActivity extends AppCompatActivity {
 
     private DatabaseReference mAnswerRef;
 
+    //変数
+    boolean isFavorite;
+
     private ChildEventListener mEventListener = new ChildEventListener() {
         @Override
         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -77,6 +80,9 @@ public class QuestionDetailActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_question_detail);
 
@@ -119,44 +125,47 @@ public class QuestionDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-
                 //登録する。
                 DatabaseReference dataBaseReference = FirebaseDatabase.getInstance().getReference();
                 DatabaseReference genreRef2 = dataBaseReference.child(Const.FavoritePATH).child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(mQuestion.getQuestionUid());
 
 
-                if(genreRef2 == null){
+                if (isFavorite) {
+                    // お気に入りされている＝削除
+                    Snackbar.make(view, "DBにあるので消す", Snackbar.LENGTH_LONG).show();
+                    genreRef2.removeValue();
+
+                } else {
+                    // お気に入りされていない＝登録
                     Snackbar.make(view, "DBにないので新しく登録する", Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(view, "DBにあるので消す", Snackbar.LENGTH_LONG).show();
                     Map<String, String> data = new HashMap<String, String>();
                     data.put("genre",valueOf(mQuestion.getGenre()) );
                     genreRef2.setValue(data);
-                }else{
-                    Snackbar.make(view, "DBにあるので消す", Snackbar.LENGTH_LONG).show();
-                    genreRef2.removeValue();
                 }
-
-                genreRef2.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        //ここにかく。
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        //ここにかく。
-                    }
-                    });
-
-
-
-
-
 
             }
         });
 
-
+        //登録する。
         DatabaseReference dataBaseReference = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference genreRef2 = dataBaseReference.child(Const.FavoritePATH).child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(mQuestion.getQuestionUid());
+
+
+
+        genreRef2.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                isFavorite = true;
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+
+
+        //DatabaseReference dataBaseReference = FirebaseDatabase.getInstance().getReference();
         mAnswerRef = dataBaseReference.child(Const.ContentsPATH).child(valueOf(mQuestion.getGenre())).child(mQuestion.getQuestionUid()).child(Const.AnswersPATH);
         mAnswerRef.addChildEventListener(mEventListener);
 
