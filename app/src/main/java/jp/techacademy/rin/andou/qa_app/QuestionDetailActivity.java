@@ -138,7 +138,6 @@ public class QuestionDetailActivity extends AppCompatActivity {
                 } else {
                     // お気に入りされていない＝登録
                     Snackbar.make(view, "DBにないので新しく登録する", Snackbar.LENGTH_LONG).show();
-                    Snackbar.make(view, "DBにあるので消す", Snackbar.LENGTH_LONG).show();
                     Map<String, String> data = new HashMap<String, String>();
                     data.put("genre",valueOf(mQuestion.getGenre()) );
                     genreRef2.setValue(data);
