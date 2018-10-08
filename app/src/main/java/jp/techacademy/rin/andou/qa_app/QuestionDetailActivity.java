@@ -120,10 +120,13 @@ public class QuestionDetailActivity extends AppCompatActivity {
             }
         });
 
-        FloatingActionButton fab2 = (FloatingActionButton) findViewById(R.id.fab2);
+        final FloatingActionButton fab2 = (FloatingActionButton) findViewById(R.id.fab2);
         fab2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+
+
 
                 //登録する。
                 DatabaseReference dataBaseReference = FirebaseDatabase.getInstance().getReference();
@@ -132,17 +135,23 @@ public class QuestionDetailActivity extends AppCompatActivity {
 
                 if (isFavorite) {
                     // お気に入りされている＝削除
-                    Snackbar.make(view, "DBにあるので消す", Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(view, "お気に入りが解除された", Snackbar.LENGTH_LONG).show();
                     genreRef2.removeValue();
                     isFavorite=false;
 
+                    //クリックされたら画像を変える。
+                    fab2.setImageResource(R.drawable.plus3);
+
                 } else {
                     // お気に入りされていない＝登録
-                    Snackbar.make(view, "DBにないので新しく登録する", Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(view, "お気に入りが登録された", Snackbar.LENGTH_LONG).show();
                     Map<String, String> data = new HashMap<String, String>();
                     data.put("genre",valueOf(mQuestion.getGenre()) );
                     genreRef2.setValue(data);
                     isFavorite=true;
+
+                    //クリックされたら画像を変える。
+                    fab2.setImageResource(R.drawable.plus2);
                 }
 
             }
