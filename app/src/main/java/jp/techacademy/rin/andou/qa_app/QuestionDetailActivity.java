@@ -134,6 +134,7 @@ public class QuestionDetailActivity extends AppCompatActivity {
                     // お気に入りされている＝削除
                     Snackbar.make(view, "DBにあるので消す", Snackbar.LENGTH_LONG).show();
                     genreRef2.removeValue();
+                    isFavorite=false;
 
                 } else {
                     // お気に入りされていない＝登録
@@ -141,6 +142,7 @@ public class QuestionDetailActivity extends AppCompatActivity {
                     Map<String, String> data = new HashMap<String, String>();
                     data.put("genre",valueOf(mQuestion.getGenre()) );
                     genreRef2.setValue(data);
+                    isFavorite=true;
                 }
 
             }
@@ -156,10 +158,12 @@ public class QuestionDetailActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 isFavorite = true;
+
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
+
             }
         });
 
