@@ -159,7 +159,11 @@ public class QuestionDetailActivity extends AppCompatActivity {
 
         //登録する。
         DatabaseReference dataBaseReference = FirebaseDatabase.getInstance().getReference();
+
+
         DatabaseReference genreRef2 = dataBaseReference.child(Const.FavoritePATH).child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(mQuestion.getQuestionUid());
+
+
 
 
 
@@ -174,6 +178,20 @@ public class QuestionDetailActivity extends AppCompatActivity {
             public void onCancelled(DatabaseError databaseError) {
 
             }
+        });
+
+        //
+        genreRef2.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                //データが取得できた時の処理をここに書きます
+                //もしデータが取得できたら
+                //もしデータが取得できなかったら
+                fab2.setImageResource(R.drawable.plus2);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {}
         });
 
 
