@@ -28,7 +28,7 @@ public class QuestionDetailActivity extends AppCompatActivity {
     private ListView mListView;
     private Question mQuestion;
     private QuestionDetailListAdapter mAdapter;
-
+    FloatingActionButton fab2;
     private DatabaseReference mAnswerRef;
 
     //変数
@@ -78,6 +78,37 @@ public class QuestionDetailActivity extends AppCompatActivity {
         }
     };
 
+
+    private ChildEventListener mFavalitListener = new ChildEventListener() {
+        @Override
+        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+            isFavorite = true;
+            fab2.setImageResource(R.drawable.plus2);
+    }
+
+        @Override
+        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+        }
+
+        @Override
+        public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+        }
+
+        @Override
+        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+        }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+
+        }
+    };
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -85,6 +116,8 @@ public class QuestionDetailActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_question_detail);
+
+        //
 
         // 渡ってきたQuestionのオブジェクトを保持する
         Bundle extras = getIntent().getExtras();
@@ -120,7 +153,8 @@ public class QuestionDetailActivity extends AppCompatActivity {
             }
         });
 
-        final FloatingActionButton fab2 = (FloatingActionButton) findViewById(R.id.fab2);
+        fab2 = (FloatingActionButton) findViewById(R.id.fab2);
+
         fab2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -167,32 +201,10 @@ public class QuestionDetailActivity extends AppCompatActivity {
 
 
 
-        genreRef2.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                isFavorite = true;
 
-            }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+        genreRef2.addChildEventListener(mFavalitListener);
 
-            }
-        });
-
-        //
-        genreRef2.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                //データが取得できた時の処理をここに書きます
-                //もしデータが取得できたら
-                //もしデータが取得できなかったら
-                fab2.setImageResource(R.drawable.plus2);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {}
-        });
 
 
         //DatabaseReference dataBaseReference = FirebaseDatabase.getInstance().getReference();
