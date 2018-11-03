@@ -140,16 +140,17 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
 
-
+        //ユーザー取得する。
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
+        //ログインしていなければ、ログイン画面へいく。
         if (user == null) {
             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
             startActivity(intent);
         }
+
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
