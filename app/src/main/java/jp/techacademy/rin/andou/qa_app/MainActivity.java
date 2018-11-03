@@ -45,16 +45,20 @@ public class MainActivity extends AppCompatActivity
     private QuestionsListAdapter mAdapter;
 
 
-
+    //
     private ChildEventListener mEventListener = new ChildEventListener() {
         @Override
         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
             HashMap map = (HashMap) dataSnapshot.getValue();
             String title = (String) map.get("title");
             String body = (String) map.get("body");
+
             String name = (String) map.get("name");
             String uid = (String) map.get("uid");
+
             String imageString = (String) map.get("image");
+
+
             byte[] bytes;
             if (imageString != null) {
                 bytes = Base64.decode(imageString, Base64.DEFAULT);
@@ -68,20 +72,28 @@ public class MainActivity extends AppCompatActivity
                 for (Object key : answerMap.keySet()) {
                     HashMap temp = (HashMap) answerMap.get((String) key);
                     String answerBody = (String) temp.get("body");
+
                     String answerName = (String) temp.get("name");
                     String answerUid = (String) temp.get("uid");
+
                     Answer answer = new Answer(answerBody, answerName, answerUid, (String) key);
                     answerArrayList.add(answer);
                 }
             }
 
-            Question question = new Question(title, body, name, uid, dataSnapshot.getKey(), mGenre, bytes, answerArrayList);
+            Question question = new Question(title, body,name, uid, dataSnapshot.getKey(), mGenre, bytes, answerArrayList);
             mQuestionArrayList.add(question);
             mAdapter.notifyDataSetChanged();
         }
 
         @Override
         public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+
+
+
+
+
             HashMap map = (HashMap) dataSnapshot.getValue();
 
             // 変更があったQuestionを探す
@@ -96,6 +108,7 @@ public class MainActivity extends AppCompatActivity
                             String answerBody = (String) temp.get("body");
                             String answerName = (String) temp.get("name");
                             String answerUid = (String) temp.get("uid");
+
                             Answer answer = new Answer(answerBody, answerName, answerUid, (String) key);
                             question.getAnswers().add(answer);
                         }
@@ -131,7 +144,12 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(mToolbar);
 
 
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
+        if (user == null) {
+            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+            startActivity(intent);
+        }
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -146,7 +164,6 @@ public class MainActivity extends AppCompatActivity
 
                 // ログイン済みのユーザーを取得する
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
                 if (user == null) {
                     // ログインしていなければログイン画面に遷移させる
                     Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
