@@ -34,6 +34,11 @@ public class QuestionDetailActivity extends AppCompatActivity {
     //変数
     boolean isFavorite;
 
+
+
+
+
+
     private ChildEventListener mEventListener = new ChildEventListener() {
         @Override
         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -49,7 +54,7 @@ public class QuestionDetailActivity extends AppCompatActivity {
             }
 
             String body = (String) map.get("body");
-            String body2 = (String) map.get("body2");
+
             String name = (String) map.get("name");
             String uid = (String) map.get("uid");
 
@@ -119,8 +124,6 @@ public class QuestionDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_question_detail);
 
-        //
-
         // 渡ってきたQuestionのオブジェクトを保持する
         Bundle extras = getIntent().getExtras();
         mQuestion = (Question) extras.get("question");
@@ -146,22 +149,26 @@ public class QuestionDetailActivity extends AppCompatActivity {
                     startActivity(intent);
                 } else {
                     // Questionを渡して回答作成画面を起動する
-                    // --- ここから ---
                     Intent intent = new Intent(getApplicationContext(), AnswerSendActivity.class);
                     intent.putExtra("question", mQuestion);
                     startActivity(intent);
-                    // --- ここまで ---
                 }
             }
         });
 
         fab2 = (FloatingActionButton) findViewById(R.id.fab2);
-
         fab2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
+                //ユーザー
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
+                if (user == null) {
+                    // ログインしていなければログイン画面に遷移させる
+                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                    startActivity(intent);
+                }
 
 
                 //登録する。
@@ -199,19 +206,18 @@ public class QuestionDetailActivity extends AppCompatActivity {
 
         DatabaseReference genreRef2 = dataBaseReference.child(Const.FavoritePATH).child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(mQuestion.getQuestionUid());
 
-
-
-
-
-
-
         genreRef2.addChildEventListener(mFavalitListener);
-
 
 
         //DatabaseReference dataBaseReference = FirebaseDatabase.getInstance().getReference();
         mAnswerRef = dataBaseReference.child(Const.ContentsPATH).child(valueOf(mQuestion.getGenre())).child(mQuestion.getQuestionUid()).child(Const.AnswersPATH);
         mAnswerRef.addChildEventListener(mEventListener);
 
+
+
+
+
+
     }
+
 }
