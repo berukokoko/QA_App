@@ -49,10 +49,12 @@ public class QuestionDetailActivity extends AppCompatActivity {
             }
 
             String body = (String) map.get("body");
+            String body2 = (String) map.get("body2");
             String name = (String) map.get("name");
             String uid = (String) map.get("uid");
 
-            Answer answer = new Answer(body, name, uid, answerUid);
+
+            Answer answer = new Answer(body,name, uid, answerUid);
             mQuestion.getAnswers().add(answer);
             mAdapter.notifyDataSetChanged();
         }
