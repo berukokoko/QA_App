@@ -33,7 +33,7 @@ public class QuestionDetailActivity extends AppCompatActivity {
 
     //変数
     boolean isFavorite;
-
+    FirebaseUser user;
 
 
 
@@ -124,6 +124,9 @@ public class QuestionDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_question_detail);
 
+
+
+
         // 渡ってきたQuestionのオブジェクトを保持する
         Bundle extras = getIntent().getExtras();
         mQuestion = (Question) extras.get("question");
@@ -160,6 +163,8 @@ public class QuestionDetailActivity extends AppCompatActivity {
         fab2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+
 
                 //ユーザー
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -200,22 +205,23 @@ public class QuestionDetailActivity extends AppCompatActivity {
             }
         });
 
-        //登録する。
-        DatabaseReference dataBaseReference = FirebaseDatabase.getInstance().getReference();
 
+        //ユーザーがなければ
+        if (user == null) {
+            // ログインしていなければ
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            findViewById(R.id.fab2).setVisibility(View.INVISIBLE);
+        } else {
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            findViewById(R.id.fab2).setVisibility(View.VISIBLE);
+            //登録する。
+            DatabaseReference dataBaseReference = FirebaseDatabase.getInstance().getReference();
+            DatabaseReference genreRef2 = dataBaseReference.child(Const.FavoritePATH).child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(mQuestion.getQuestionUid());
+            genreRef2.addChildEventListener(mFavalitListener);
+            mAnswerRef = dataBaseReference.child(Const.ContentsPATH).child(valueOf(mQuestion.getGenre())).child(mQuestion.getQuestionUid()).child(Const.AnswersPATH);
+            mAnswerRef.addChildEventListener(mEventListener);
 
-        DatabaseReference genreRef2 = dataBaseReference.child(Const.FavoritePATH).child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(mQuestion.getQuestionUid());
-
-        genreRef2.addChildEventListener(mFavalitListener);
-
-
-        //DatabaseReference dataBaseReference = FirebaseDatabase.getInstance().getReference();
-        mAnswerRef = dataBaseReference.child(Const.ContentsPATH).child(valueOf(mQuestion.getGenre())).child(mQuestion.getQuestionUid()).child(Const.AnswersPATH);
-        mAnswerRef.addChildEventListener(mEventListener);
-
-
-
-
+        }
 
 
     }
