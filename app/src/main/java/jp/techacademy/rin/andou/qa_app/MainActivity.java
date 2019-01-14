@@ -37,10 +37,13 @@ public class MainActivity extends AppCompatActivity
     private Toolbar mToolbar;
     private int mGenre = 0;
 
+
+
     // --- ここから ---
     private DatabaseReference mDatabaseReference;
     private DatabaseReference mGenreRef;
     private ListView mListView;
+
     private ArrayList<Question> mQuestionArrayList;
     private QuestionsListAdapter mAdapter;
 
@@ -141,13 +144,13 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //ユーザー取得する。
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        //ログインしていなければ、ログイン画面へいく。
-        if (user == null) {
-            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-            startActivity(intent);
-        }
+
+
+
+
+
+
+
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
@@ -157,18 +160,23 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // ジャンルを選択していない場合（mGenre == 0）はエラーを表示するだけ
+                 //ジャンルを選択していない場合（mGenre == 0）はエラーを表示するだけ
                 if (mGenre == 0) {
                     Snackbar.make(view, "ジャンルを選択して下さい", Snackbar.LENGTH_LONG).show();
                     return;
                 }
 
                 // ログイン済みのユーザーを取得する
+
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+
+                //ユーザーがなければ
                 if (user == null) {
                     // ログインしていなければログイン画面に遷移させる
                     Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                     startActivity(intent);
+
                 } else {
                     // ジャンルを渡して質問作成画面を起動する
                     Intent intent = new Intent(getApplicationContext(), QuestionSendActivity.class);
@@ -196,6 +204,7 @@ public class MainActivity extends AppCompatActivity
 
         // ListViewの準備
         mListView = (ListView) findViewById(R.id.listView);
+
         mAdapter = new QuestionsListAdapter(this);
         mQuestionArrayList = new ArrayList<Question>();
         mAdapter.notifyDataSetChanged();
@@ -213,13 +222,22 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onResume() {
+
+
+
+
         super.onResume();
+
 
         // 1:趣味を既定の選択とする
         if(mGenre == 0) {
             NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
             onNavigationItemSelected(navigationView.getMenu().getItem(0));
         }
+
+
+
+
     }
 
     @Override
@@ -258,8 +276,9 @@ public class MainActivity extends AppCompatActivity
             mToolbar.setTitle("コンピューター");
             mGenre = 4;
         } else if (id == R.id.nav_fav) {
-            mToolbar.setTitle("お気に入り");
-            mGenre = 5;
+         //インテントを飛ばす。四則４参考
+            Intent intent = new Intent(this, FavDetailActivity.class);
+            startActivity(intent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
